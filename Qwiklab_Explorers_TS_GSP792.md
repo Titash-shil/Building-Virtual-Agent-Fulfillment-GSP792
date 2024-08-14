@@ -2,14 +2,83 @@
 
 # # Like, comment, share & Don't forget to subscribe [Qwiklab_Explorers_ts](https://youtube.com/@titashshil?si=RgamNu1dc9jVIbJN) 👍😄🤝
 
+---
+
 * Enable `Dialogflow API` from [here](https://console.cloud.google.com/marketplace/product/google/dialogflow.googleapis.com?)
 
 * Enable `Cloud Functions API` from [here](https://console.cloud.google.com/marketplace/product/google/cloudfunctions.googleapis.com?)
 
-* Go to `Firestore` from [here](https://console.cloud.google.com/firestore?)
+---
+## Run the following Commands in Cloud Shell :
 
-* Copy and Paste the following in `index.js`
+```bash
 
+export PROJECT_NUMBER=$(gcloud projects describe $DEVSHELL_PROJECT_ID --format='value(projectNumber)')
+export PROJECT_ID=$(gcloud info --format='value(config.project)')
+
+
+gcloud services enable dialogflow.googleapis.com
+gcloud services disable cloudfunctions.googleapis.com
+gcloud services enable cloudfunctions.googleapis.com
+gcloud services enable firestore.googleapis.com
+
+
+gcloud projects add-iam-policy-binding $PROJECT_ID \
+  --member="serviceAccount:service-$PROJECT_NUMBER@gcf-admin-robot.iam.gserviceaccount.com" \
+  --role="roles/artifactregistry.reader"
+
+
+gcloud firestore databases create --location=nam5
+
+
+# Print Firestore in yellow
+echo -e "\033[1;33mFirestore\033[0m"
+
+# Print the URL in blue and bold
+echo -e "\033[1;34m(https://console.cloud.google.com/firestore/databases/-default-/data/panel)\033[0m"
+```
+
+---
+
+## Create and Save a Collection
+
+1. **Click** `Start collection`.
+
+2. **Fill in the details** as follows, then click **Save**:
+
+   - **Collection ID**: `reservations`
+   - **Document ID**: `100`
+
+3. **Add Fields** to the collection:
+
+   - **Field name**: `fname`
+     - **Field type**: `string`
+     - **Field value**: `Isabel`
+
+   - Click the **Add a Field (+)** button to add another field:
+
+     - **Field name**: `lname`
+       - **Field type**: `string`
+       - **Field value**: `Costa`
+
+   - Click the **Add a Field (+)** button to add another field:
+
+     - **Field name**: `newname`
+       - **Field type**: `string`
+       - **Field value**: *(leave empty)*
+
+4. **Click Save** to finalize the collection.
+
+---
+
+## Resources
+
+- **[Dialogflow Console](https://dialogflow.cloud.google.com/)**
+
+- **Download Files**:
+  - [Download ZIP File](https://storage.cloud.google.com/qwiklabs-resources-ccai-quest/pigeon-travel-gsp-792.zip)
+
+## index.js :
 ```
 // See https://github.com/dialogflow/dialogflow-fulfillment-nodejs
 // for Dialogflow fulfillment library docs, samples, and to report issues
@@ -19,11 +88,10 @@ const functions = require('firebase-functions');
 const {WebhookClient} = require('dialogflow-fulfillment');
 const {Card, Suggestion} = require('dialogflow-fulfillment');
 const admin = require('firebase-admin');
+process.env.DEBUG = 'dialogflow:debug'; // enables lib debugging statements
 admin.initializeApp();
 admin.firestore().settings( { timestampsInSnapshots: true });
 const db = admin.firestore();
-process.env.DEBUG = 'dialogflow:debug'; // enables lib debugging statements
- 
 exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, response) => {
   function reservation(agent) {
 	let id = agent.parameters.reservationnumber.toString();
@@ -99,13 +167,12 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
   agent.handleRequest(intentMap);
 });
 ```
-
-* Copy and Paste the following in `package.json`
+## package.json : 
 
 ```
 {
   "name": "dialogflowFirebaseFulfillment",
-  "description": "please like share & subscribe to quicklab",
+  "description": "This is the default fulfillment for a Dialogflow agents using Cloud Functions for Firebase",
   "version": "0.0.1",
   "private": true,
   "license": "Apache Version 2.0",
@@ -122,11 +189,23 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
     "firebase-admin": "^5.13.1",
     "firebase-functions": "^2.0.2",
     "dialogflow": "^0.6.0",
-    "dialogflow-fulfillment": "^0.5.0",
-    "firebase-admin": "^5.13.1"
+    "dialogflow-fulfillment": "^0.5.0"
   }
 }
 ```
+---
+
+### Final Steps
+
+- **Before moving on**, check the score for Task 4.
+
+- **Try it out in the simulator** by typing: `change name on booking`
+  - **For Name**: `Kelly`
+  - **For Number**: `100`
+
+---
+
+
 
 # Congratulations ..!!🎉  You completed the lab shortly..😃💯
 
