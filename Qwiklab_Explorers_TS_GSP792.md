@@ -76,7 +76,7 @@ echo -e "\033[1;34m(https://console.cloud.google.com/firestore/databases/-defaul
 - **[Dialogflow Console](https://dialogflow.cloud.google.com/)**
 
 - **Download Files**:
-  - [Download ZIP File](https://storage.cloud.google.com/qwiklabs-resources-ccai-quest/pigeon-travel-gsp-792.zip)
+  - [Download ZIP File](https://github.com/Titash-shil/Building-Virtual-Agent-Fulfillment-GSP792/blob/main/quicklabgsp792%20(1).zip)
 
 ## index.js :
 ```
